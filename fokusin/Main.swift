@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct Main: View {
     @State private var difficulty: String? = nil
     @State private var navigationPath = NavigationPath()
     @State private var logoScale = 0.5
@@ -20,14 +20,35 @@ struct ContentView: View {
     var body: some View {
         NavigationStack(path: $navigationPath) {
             ZStack {
-                Color.white.edgesIgnoringSafeArea(.all)
+                Color.primer.edgesIgnoringSafeArea(.all)
                 
                 VStack {
+                    // Header dengan logo teks dan ikon profil
+                    HStack {
+                        Text("Fokusin")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(.tombol)
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            // Aksi ketika ikon profil ditekan
+                        }) {
+                            Image(systemName: "person.circle.fill")
+                                .resizable()
+                                .frame(width: 40, height: 40)
+                                .foregroundColor(.tombol2)
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.top, -15) // Beri padding atas agar tidak terlalu mepet
+                    
                     Spacer()
                     
                     // Animasi Pop-Up + Bounce Effect
                     Circle()
-                        .fill(Color(red: 0.4, green: 0.8, blue: 0.6))
+                        .fill(.primer1)
                         .frame(width: 200, height: 200)
                         .scaleEffect(logoScale)
                         .opacity(logoOpacity)
@@ -40,21 +61,21 @@ struct ContentView: View {
                     
                     // Animasi Slide-Up Button
                     VStack {
-                        HStack(spacing: 10) {
-                            difficultyButton(label: "ez")
-                            difficultyButton(label: "med")
-                            difficultyButton(label: "hard")
-                            
+                        VStack(spacing: 10) {
+                            difficultyButton(label: "Easy")
+                            difficultyButton(label: "Medium")
+                            difficultyButton(label: "Hard")
                         }
                         
-                        Button(action: { difficulty = "custom"; navigate() }) {
-                            Text("custom")
-                                .foregroundColor(.white)
+                        Button(action: { difficulty = "Custom"; navigate() }) {
+                            Text("Custom")
+                                .foregroundColor(.primer)
                                 .frame(width: 200, height: 50)
-                                .background(Color.blue)
+                                .background(.tombol2)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                         .padding(.top, 10)
+                        
                     }
                     .offset(y: buttonOffset)
                     .opacity(buttonOpacity)
@@ -90,9 +111,9 @@ struct ContentView: View {
     private func difficultyButton(label: String) -> some View {
         Button(action: { difficulty = label; navigate() }) {
             Text(label)
-                .foregroundColor(.white)
-                .frame(width: 60, height: 40)
-                .background(Color.blue)
+                .foregroundColor(.tombol2)
+                .frame(width: 200, height: 50)
+                .background(.tombol)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
         }
     }
@@ -105,6 +126,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    Main()
 }
+
 

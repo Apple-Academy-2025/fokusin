@@ -32,10 +32,6 @@ fileprivate struct AlertViewHelper<ViewContent: View>: ViewModifier {
     }
 }
 
-#Preview {
-    AlertPreviewWrapper()
-}
-
 struct AlertPreviewWrapper: View {
     @State private var showAlert = true
     @State private var remainingSessions = 3
@@ -60,3 +56,9 @@ struct AlertPreviewWrapper: View {
         }
     }
 }
+
+#Preview {
+    AlertPreviewWrapper()
+}
+
+
