@@ -1,13 +1,12 @@
 import SwiftUI
+import SwiftData
 
 struct CountdownView: View {
     let difficulty: String
     let focusTime: Int
     let restTime: Int
     let session: Int
-    
-    @State var isActive : Bool = false
-    
+
     @State private var timeRemaining: Int
     @State private var sessionCount: Int
     @State private var isFocusTime: Bool = true
@@ -19,7 +18,8 @@ struct CountdownView: View {
     @State private var sessionMessage: String = ""
     @State private var buttonText: String = "Start"
 
-    @Environment(\.presentationMode) var presentationMode // 🔹 Untuk menangani navigasi keluar
+    @Environment(\.dismiss) private var dismiss  // Gunakan dismiss untuk kembali ke halaman sebelumnya
+    @Environment(\.modelContext) private var modelContext
 
     init(difficulty: String, focusTime: Int, restTime: Int, session: Int) {
         self.difficulty = difficulty
@@ -33,22 +33,22 @@ struct CountdownView: View {
     var body: some View {
         ZStack {
             Color.primer.ignoresSafeArea(.all)
-            
+
             VStack {
                 ZStack {
                     Circle()
                         .fill(Color.primer1)
                         .frame(width: 200, height: 200)
-                    
+
                     Text(isFocusTime ? "Focus Time" : "Rest Time")
                         .font(.largeTitle)
                         .padding()
                 }
-                
+
                 Text("\(formatTime(timeRemaining))")
                     .font(.system(size: 40, weight: .bold))
                     .padding()
-                
+
                 HStack(spacing: 20) {
                     Button(action: { handleButtonPress() }) {
                         Text(buttonText)
@@ -64,78 +64,68 @@ struct CountdownView: View {
                 stopTimer()
             }
         }
-        
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
-                EmptyView() // 🔥 Sembunyikan tombol back
+                EmptyView()
             }
         }
-
-        
-
         .overlay {
-            if showExitAlert {
-                CustomAlert(
-                    isActive: $showExitAlert,
-                    title: "Keluar Nih?!",
-                    message: "Kamu yakin akan meninggalkan pomodoro? telur nya nanti pecah",
-                    buttonTitle: "Keluar"
+            if sessionCount > 1 {
+                if showSessionAlert {
+                    AlertWithoutButton(
+                        isActive: $showSessionAlert,
+                        title: "Perubahan Sesi",
+                        message: sessionMessage
+                    )
+                }
+            } else {
+                if showSessionAlert {
+                    AlertWithoutButton(
+                        isActive: $showSessionAlert,
+                        title: "Hebatt!!",
+                        message: sessionMessage
+                    )
+                }
+            }
+                if showExitAlert {
+                    CustomAlert(
+                        isActive: $showExitAlert,
+                        title: "Keluar Nih?!",
+                        message: "Kamu yakin akan meninggalkan pomodoro? telur nya nanti pecah",
+                        buttonTitle: "Keluar"
                 ){
+       //                    saveSession(isCompleted: false)
+                    saveSession(isCompleted: false)
+                    print("keluar ok")
                     exitPomodoro()
                 }
             }
-            
-            if showSessionAlert {
-                AlertWithoutButton(
-                    isActive: $showSessionAlert,
-                    title: "Sesi Berubah",
-                    message: sessionMessage
-                )
-            }
-            
-//            jika sudah selesai?
-        
-            
-            
-        
         }.interactiveDismissDisabled(true)
-
         .onChange(of: showExitAlert) {
             if showExitAlert {
-                stopTimer() // ⏸️ Hentikan timer
+                stopTimer()
             } else {
-                resumeTimer() // ▶️ Lanjutkan timer
+                resumeTimer()
             }
         }
     }
-    
-    
-    /// Fungsi untuk menghentikan Pomodoro dan kembali ke halaman sebelumnya
-    private func exitPomodoro() {
-        print("berhasil keluar")
-        stopTimer() // 🔥 Hentikan timer agar tidak terus berjalan
-        presentationMode.wrappedValue.dismiss() // 🔹 Kembali ke halaman sebelumnya
-    }
 
-    
     private func resumeTimer() {
         if !timerRunning {
             startTimer()
         }
     }
 
-
     private func handleButtonPress() {
         if buttonText == "Start" {
             startTimer()
-            buttonText = "Skip"
+            buttonText = "Stop"
         } else {
-            stopTimer() // 🔥 Pause sementara, bukan stop total
-            showExitAlert = true // 🔹 Jika "Skip" ditekan, tampilkan alert keluar
+            stopTimer()
+            showExitAlert = true
         }
     }
-
 
     private func startTimer() {
         timerRunning = true
@@ -155,47 +145,78 @@ struct CountdownView: View {
     }
 
     private func handleSessionEnd() {
-        if sessionCount > 1 {
-            isFocusTime.toggle()
+        if isFocusTime {
             sessionCount -= 1
-            timeRemaining = isFocusTime ? focusTime : restTime
-                    
-            // 🔥 Menentukan pesan alert untuk pergantian sesi
-            if isFocusTime {
-                sessionMessage = "Kembali ke sesi fokus! Sisa \(sessionCount) sesi lagi."
-                } else {
-                    sessionMessage = "Waktunya istirahat! Sisa fokus \(sessionCount) sesi lagi."
-                }
-                    
+            if sessionCount > 0 {
+                isFocusTime = false
+                timeRemaining = restTime
+                sessionMessage = "Waktunya istirahat! Sisa \(sessionCount) sesi lagi."
                 showSessionAlert = true
-                    
-                // ⏳ Alert hilang setelah 3 detik
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                     showSessionAlert = false
                     startTimer()
                 }
             } else {
-                // 🎉 Jika sesi selesai, tampilkan alert selesai
+                saveSession(isCompleted: true)
                 sessionMessage = "Pomodoro selesai! Kerja bagus! 🎉"
                 showSessionAlert = true
-                    
+
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    showSessionAlert = false
-                    exitPomodoro()
+                    dismiss()  // ✅ Kembali ke halaman utama setelah selesai
                 }
             }
+        } else {
+            sessionCount -= 1
+            isFocusTime = true
+            timeRemaining = focusTime
+            sessionMessage = "Bersiap! Waktu fokus akan dimulai lagi."
+            showSessionAlert = true
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                showSessionAlert = false
+                startTimer()
+            }
+        }
     }
-    
-    
+
+    private func exitPomodoro() {
+        stopTimer()
+        dismiss()  // ✅ Kembali ke halaman utama ketika keluar
+    }
 
     private func formatTime(_ seconds: Int) -> String {
         let minutes = seconds / 60
         let seconds = seconds % 60
         return String(format: "%02d:%02d", minutes, seconds)
     }
+
+    private func saveSession(isCompleted: Bool) {
+        guard let difficultyLevel = Difficulty(rawValue: difficulty) else {
+            print("⚠️ Error: Difficulty tidak valid")
+            return
+        }
+
+        let newSession = PomodoroSession(
+            difficulty: difficultyLevel,
+            timeFocus: focusTime,
+            session: session,
+            totalFocus: focusTime * session,
+            status: isCompleted
+        )
+
+        modelContext.insert(newSession)
+
+        do {
+            try modelContext.save()
+            print("✅ Session saved successfully!")
+        } catch {
+            print("❌ Failed to save session: \(error.localizedDescription)")
+        }
+    }
 }
 
-
-#Preview {
-    CountdownView(difficulty: "Easy", focusTime: 3, restTime: 2, session: 1)
+struct CountdownView_Previews: PreviewProvider {
+    static var previews: some View {
+        CountdownView(difficulty: "Easy", focusTime: 10, restTime: 5, session: 2)
+    }
 }

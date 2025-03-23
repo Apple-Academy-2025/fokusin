@@ -47,7 +47,7 @@ struct AlertWithoutButton: View {
                 withAnimation(.spring()) {
                     offset = 0
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
                     close()
                 }
             }

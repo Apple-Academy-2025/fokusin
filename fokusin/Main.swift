@@ -32,14 +32,16 @@ struct Main: View {
                         
                         Spacer()
                         
-                        Button(action: {
-                            // Aksi ketika ikon profil ditekan
-                        }) {
-                            Image(systemName: "person.circle.fill")
-                                .resizable()
-                                .frame(width: 40, height: 40)
-                                .foregroundColor(.tombol2)
-                        }
+//                        Arah ke history
+                        // ✅ Perbaiki NavigationLink agar meneruskan modelContext
+                        
+                        NavigationLink(destination: HistoryView()) {
+                                Image(systemName: "person.circle.fill")
+                                    .resizable()
+                                    .frame(width: 40, height: 40)
+                                    .foregroundColor(.tombol2)
+                            }
+
                     }
                     .padding(.horizontal)
                     .padding(.top, -15) // Beri padding atas agar tidak terlalu mepet

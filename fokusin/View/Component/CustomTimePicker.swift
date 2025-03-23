@@ -5,49 +5,66 @@
 //  Created by Muhamad Alif Anwar on 20/03/25.
 //
 
+//
+//  CustomTimePicker.swift
+//  fokusin
+//
+//  Created by Muhamad Alif Anwar on 20/03/25.
+//
+
 import SwiftUI
 
 struct CustomTimePicker: View {
     let title: String
     @Binding var totalSeconds: Int
     
-    // State untuk menyimpan menit dan detik secara terpisah
     @State private var minutes: Int = 0
     @State private var seconds: Int = 0
 
     var body: some View {
-        VStack {
+        VStack(spacing: 2) { // 🔥 Jarak antar elemen lebih kecil
             Text(title)
                 .font(.caption)
                 .foregroundColor(.gray)
             
-            HStack {
-                // 🔹 Picker untuk Menit (0 - 59)
-                Picker("Menit", selection: $minutes) {
-                    ForEach(0..<60, id: \.self) { min in
-                        Text("\(min) min").tag(min)
+            HStack(alignment: .center, spacing: 5) { // 🔥 Kurangi spacing agar lebih rapat
+                // 🔹 Picker Menit
+                VStack {
+                    Text("Min")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    
+                    Picker("Menit", selection: $minutes) {
+                        ForEach(0..<60, id: \.self) { min in
+                            Text("\(min)").tag(min)
+                        }
                     }
+                    .pickerStyle(WheelPickerStyle())
+                    .frame(width: 70, height: 120) // 🔥 Kurangi tinggi
+                    .clipped()
                 }
-                .pickerStyle(WheelPickerStyle())
-                .frame(maxWidth: 80, maxHeight: 100)
-                .clipped()
                 
+                // 🔹 Pemisah ":"
                 Text(":")
-                    .font(.largeTitle)
-                    .padding(.horizontal, 5)
+                    .font(.title) // 🔥 Sedikit lebih kecil
+                    .padding(.horizontal, 3) // 🔥 Kurangi padding
 
-                // 🔹 Picker untuk Detik (0 - 59)
-                Picker("Detik", selection: $seconds) {
-                    ForEach(0..<60, id: \.self) { sec in
-                        Text("\(sec) sec").tag(sec)
+                // 🔹 Picker Detik
+                VStack {
+                    Text("Sec")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                    
+                    Picker("Detik", selection: $seconds) {
+                        ForEach(0..<60, id: \.self) { sec in
+                            Text("\(sec)").tag(sec)
+                        }
                     }
+                    .pickerStyle(WheelPickerStyle())
+                    .frame(width: 70, height: 120) // 🔥 Kurangi tinggi
+                    .clipped()
                 }
-                .pickerStyle(WheelPickerStyle())
-                .frame(maxWidth: 80, maxHeight: 100)
-                .clipped()
             }
-//            .background(Color.tombol)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
         }
         .onChange(of: minutes) {
             updateTotalSeconds()
@@ -55,17 +72,20 @@ struct CustomTimePicker: View {
         .onChange(of: seconds) {
             updateTotalSeconds()
         }
-
         .onAppear {
-            // Saat tampilan muncul, pecah total detik menjadi menit dan detik
             minutes = totalSeconds / 60
             seconds = totalSeconds % 60
         }
     }
     
-    /// 🔹 Fungsi untuk mengupdate total detik dari `minutes` dan `seconds`
     private func updateTotalSeconds() {
         totalSeconds = (minutes * 60) + seconds
     }
 }
+
+
+
+
+
+
 
