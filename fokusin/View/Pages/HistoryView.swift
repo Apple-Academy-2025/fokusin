@@ -20,10 +20,10 @@ struct HistoryView: View {
                             .font(.headline)
                             .foregroundColor(.blue)
 
-                        Text("⏳ Fokus: \(session.timeFocus) menit x \(session.session) sesi")
+                        Text("⏳ Fokus: \(formatTime(session.timeFocus)) x \(session.session) sesi")
                             .font(.subheadline)
 
-                        Text("📊 Total Waktu: \(session.totalFocus) menit")
+                        Text("📊 Total Waktu: \(session.totalFocus / 60) menit")
                             .font(.subheadline)
                             .foregroundColor(.gray)
 
@@ -37,9 +37,24 @@ struct HistoryView: View {
             .navigationTitle("History")
         }
     }
+
+    // Fungsi untuk format waktu dalam menit & detik
+    func formatTime(_ seconds: Int) -> String {
+        let minutes = seconds / 60
+        let remainingSeconds = seconds % 60
+
+        if minutes == 0 {
+            return "\(remainingSeconds) detik"
+        } else if remainingSeconds == 0 {
+            return "\(minutes) menit"
+        } else {
+            return "\(minutes) menit \(remainingSeconds) detik"
+        }
+    }
 }
 
 #Preview {
     HistoryView()
 }
+
 
