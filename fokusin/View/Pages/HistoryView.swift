@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData  // Pastikan SwiftData di-import
+import Lottie
 
 struct HistoryView: View {
     @Query var sessions: [PomodoroSession]  // Ambil semua data PomodoroSession
@@ -14,24 +15,40 @@ struct HistoryView: View {
     var body: some View {
         NavigationView {
             List {
-                ForEach(sessions) { session in
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text("🔥 \(session.difficulty.rawValue) Mode")
-                            .font(.headline)
-                            .foregroundColor(.blue)
-
-                        Text("⏳ Fokus: \(formatTime(session.timeFocus)) x \(session.session) sesi")
-                            .font(.subheadline)
-
-                        Text("📊 Total Waktu: \(session.totalFocus / 60) menit")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-
-                        Text(session.status ? "✅ Selesai" : "❌ Dibatalkan")
-                            .font(.subheadline)
-                            .foregroundColor(session.status ? .green : .red)
+                if sessions.isEmpty {
+                    Section {
+                        VStack {
+                            LottieView(animation: .named("EmpetyEgg"))
+                                .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                                .frame(width: 300, height: 250)  // 🔹 Sesuaikan ukuran
+                            
+                            Text("Kamu masih belum ada riwayat")
+                                .font(.headline)
+                                .foregroundColor(.gray)
+                                .padding(.top, 10)
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
-                    .padding(.vertical, 5)
+                } else {
+                    ForEach(sessions) { session in
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text("🔥 \(session.difficulty.rawValue) Mode")
+                                .font(.headline)
+                                .foregroundColor(.blue)
+
+                            Text("⏳ Fokus: \(formatTime(session.timeFocus)) x \(session.session) sesi")
+                                .font(.subheadline)
+
+                            Text("📊 Total Waktu: \(session.totalFocus / 60) menit")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+
+                            Text(session.status ? "✅ Selesai" : "❌ Dibatalkan")
+                                .font(.subheadline)
+                                .foregroundColor(session.status ? .green : .red)
+                        }
+                        .padding(.vertical, 5)
+                    }
                 }
             }
             .navigationTitle("History")
@@ -56,5 +73,6 @@ struct HistoryView: View {
 #Preview {
     HistoryView()
 }
+
 
 
