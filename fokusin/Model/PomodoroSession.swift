@@ -15,21 +15,43 @@ enum Difficulty: String, Codable {
     case custom = "Custom"
 }
 
+//@Model
+//class PomodoroSession {
+//    var id: UUID = UUID() // Tidak perlu anotasi khusus
+//    var difficulty: Difficulty
+//    var timeFocus: Int
+//    var session: Int
+//    var totalFocus: Int
+//    var status: Bool
+//
+//    init(difficulty: Difficulty, timeFocus: Int, session: Int, totalFocus: Int, status: Bool) {
+//        self.difficulty = difficulty
+//        self.timeFocus = timeFocus
+//        self.session = session
+//        self.totalFocus = totalFocus
+//        self.status = status
+//    }
+//}
+
+
+
 @Model
 class PomodoroSession {
-    var id: UUID = UUID() // Tidak perlu anotasi khusus
+    var id: UUID = UUID()
     var difficulty: Difficulty
     var timeFocus: Int
     var session: Int
     var totalFocus: Int
     var status: Bool
+    var date: Date
 
-    init(difficulty: Difficulty, timeFocus: Int, session: Int, totalFocus: Int, status: Bool) {
+    init(difficulty: Difficulty, timeFocus: Int, session: Int, totalFocus: Int, status: Bool, date: Date = Date()) {
         self.difficulty = difficulty
         self.timeFocus = timeFocus
         self.session = session
         self.totalFocus = totalFocus
         self.status = status
+        self.date = date
     }
 }
 

@@ -50,6 +50,11 @@ class PomodoroSessionViewModel {
         save()
     }
     
+    func totalBerhasilHariIni() -> Int {
+        let today = Calendar.current.startOfDay(for: Date())
+        return sessions.filter { $0.status && Calendar.current.isDate($0.date, inSameDayAs: today) }.count
+    }
+    
     /// Simpan perubahan ke database
     private func save() {
         do {

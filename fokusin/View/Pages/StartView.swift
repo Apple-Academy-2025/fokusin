@@ -33,6 +33,10 @@ struct StartView: View {
             VStack {
                 Spacer(minLength: 105)
                 
+                Text("Mode \(difficulty)")
+                    .font(.title)
+                    .fontWeight(.bold)
+                
                 Ellipse()
                     .fill(Color.gray.opacity(0.3))
                     .frame(width: 150, height: 20)
@@ -41,7 +45,7 @@ struct StartView: View {
                 // 🔥 Animasi Telur Goyang
                 Image(.telurUtuh)
                     .resizable()
-                    .frame(width: 180, height: 200)
+                    .frame(width: 170, height: 200)
                     .padding(.bottom, 20)
                     .rotationEffect(.degrees(isShaking ? 5 : -5)) // 🔄 Goyangan kanan-kiri
                 
@@ -55,30 +59,53 @@ struct StartView: View {
                 VStack {
                     if difficulty == "Custom" {
                         VStack {
-                            CustomTimePicker(title: "⏳ Fokus", totalSeconds: $focusTime)
-                            CustomTimePicker(title: "💤 Istirahat", totalSeconds: $restTime)
+                            CustomTimePicker(title: "Fokus",icon: "target", totalSeconds: $focusTime)
+                            CustomTimePicker(title: "Istirahat",icon: "clock", totalSeconds: $restTime)
                             
-                            Text("Sesi")
                             HStack {
-                                Button(action: { if session > 1 { session -= 1 } }) {
-                                    Image(systemName: "minus.circle.fill")
-                                        .font(.largeTitle)
-                                        .foregroundColor(.red)
+                                // 🔹 Ikon di sebelah kiri
+                                HStack(spacing:5){
+                                    Image(systemName: "arrow.counterclockwise")
+                                        .font(.title2)
+                                        .clipShape(Circle())
+                                        .foregroundColor(.tombol2)
+
+                                    Text("Sesi")
+                                        .font(.title3)
+                                        .fontWeight(.semibold)
                                 }
+
+                                Divider()
+                                       .frame(width: 94)
                                 
-                                Text("\(session)x")
-                                    .font(.title)
-                                    .frame(width: 80, height: 60)
-                                    .background(Color.tombol)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                                
-                                Button(action: { if session < 10 { session += 1 } }) {
-                                    Image(systemName: "plus.circle.fill")
-                                        .font(.largeTitle)
-                                        .foregroundColor(.green)
+                                // 🔹 Tombol sesi
+                                HStack(spacing: 8) {
+                                    Button(action: { if session > 1 { session -= 1 } }) {
+                                        Text("−")
+                                            .font(.title)
+                                            .frame(width: 30, height: 30) // Ukuran tombol
+                                            .background(Color.tombol)
+                                            .foregroundColor(.black)
+                                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                                    }
+
+                                    Text("\(session)")
+                                        .font(.title)
+                                        .fontWeight(.bold)
+                                        .frame(width: 30)
+
+                                    Button(action: { if session < 10 { session += 1 } }) {
+                                        Text("+")
+                                            .font(.title)
+                                            .frame(width: 30, height: 30)
+                                            .background(Color.tombol)
+                                            .foregroundColor(.black)
+                                            .clipShape(RoundedRectangle(cornerRadius: 5))
+                                    }
                                 }
                             }
-                            .padding()
+                            
+                            
                         }
                     } else {
                         HStack(spacing: 10) {
@@ -126,7 +153,7 @@ struct StartView: View {
 
 
 #Preview {
-    StartView(difficulty: "Medium")
+    StartView(difficulty: "Custom")
 }
 
 

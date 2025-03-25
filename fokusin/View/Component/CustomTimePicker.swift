@@ -1,77 +1,76 @@
-//
-//  CustomTimePicker.swift
-//  fokusin
-//
-//  Created by Muhamad Alif Anwar on 20/03/25.
-//
-
-//
-//  CustomTimePicker.swift
-//  fokusin
-//
-//  Created by Muhamad Alif Anwar on 20/03/25.
-//
-
 import SwiftUI
 
 struct CustomTimePicker: View {
     let title: String
+    let icon: String
+
     @Binding var totalSeconds: Int
     
     @State private var minutes: Int = 0
     @State private var seconds: Int = 0
 
     var body: some View {
-        VStack(spacing: 2) { // 🔥 Jarak antar elemen lebih kecil
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.gray)
+        VStack(alignment: .leading,spacing: 2) {
+            HStack(alignment: .center, spacing: 12) { // 🔥 Pastikan sejajar tengah
+                Image(systemName: "\(icon)")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(.tombol2)
+                    .frame(width: 20, height: 20) // 🔹 Sesuaikan ukuran ikon
+                
+                Text(title)
+                    .font(.title3)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.gray)
+                    .baselineOffset(-1) // 🔹 Atur agar teks sejajar dengan ikon
+            }
             
-            HStack(alignment: .center, spacing: 5) { // 🔥 Kurangi spacing agar lebih rapat
+            .padding(.bottom,12)
+
+            
+            HStack(alignment: .center, spacing: 18) { // 🔥 Spacing antar elemen
                 // 🔹 Picker Menit
                 VStack {
-                    Text("Min")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                    
                     Picker("Menit", selection: $minutes) {
                         ForEach(0..<60, id: \.self) { min in
-                            Text("\(min)").tag(min)
+                            Text(String(format: "%02d", min))
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(.white)
                         }
                     }
                     .pickerStyle(WheelPickerStyle())
-                    .frame(width: 70, height: 120) // 🔥 Kurangi tinggi
-                    .clipped()
+                    .frame(width: 120, height: 80)
+                    .background(Color.brown.opacity(0.9)) // 🔥 Warna background
+                    .cornerRadius(12) // 🔥 Rounded edges
                 }
                 
                 // 🔹 Pemisah ":"
                 Text(":")
-                    .font(.title) // 🔥 Sedikit lebih kecil
-                    .padding(.horizontal, 3) // 🔥 Kurangi padding
-
+                    .font(.system(size: 60))
+                    .fontWeight(.bold)
+                    .foregroundColor(.brown)
+                
                 // 🔹 Picker Detik
                 VStack {
-                    Text("Sec")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                    
                     Picker("Detik", selection: $seconds) {
                         ForEach(0..<60, id: \.self) { sec in
-                            Text("\(sec)").tag(sec)
+                            Text(String(format: "%02d", sec))
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .fontWeight(.bold)
                         }
                     }
                     .pickerStyle(WheelPickerStyle())
-                    .frame(width: 70, height: 120) // 🔥 Kurangi tinggi
-                    .clipped()
+                    .frame(width: 120, height: 80)
+
+                    .background(Color.brown.opacity(0.9))
+                    .cornerRadius(12)
                 }
             }
         }
-        .onChange(of: minutes) {
-            updateTotalSeconds()
-        }
-        .onChange(of: seconds) {
-            updateTotalSeconds()
-        }
+        .onChange(of: minutes) { updateTotalSeconds() }
+        .onChange(of: seconds) { updateTotalSeconds() }
         .onAppear {
             minutes = totalSeconds / 60
             seconds = totalSeconds % 60
@@ -83,9 +82,16 @@ struct CustomTimePicker: View {
     }
 }
 
-
-
-
-
-
-
+#Preview {
+    struct PreviewWrapper: View {
+        @State private var time: Int = 90  // 1 menit 30 detik
+        
+        var body: some View {
+            CustomTimePicker(title: "Fokus", icon: "clock" , totalSeconds: $time)
+                .padding()
+                // Warna latar belakang
+        }
+    }
+    
+    return PreviewWrapper()
+}
