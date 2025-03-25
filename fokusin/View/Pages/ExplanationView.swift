@@ -6,9 +6,15 @@
 //
 
 import SwiftUI
+import Lottie
 
 struct ExplanationView: View {
     @StateObject private var viewModel = DifficultyViewModel()
+    @State private var logoScale = 0.5
+    @State private var logoOpacity = 0.0
+    @State private var buttonOffset: CGFloat = 100
+    @State private var buttonOpacity = 0.0
+    @State private var bounceEffect = false
     let difficulty: String
     
     var body: some View {
@@ -17,23 +23,29 @@ struct ExplanationView: View {
             
             VStack {
                 Spacer(minLength: 95)
-
-                // 🔵 Icon lingkaran dengan nama mode
+                
+            
                 ZStack {
-                    Circle()
-                        .fill(Color.primer1)
-                        .frame(width: 200, height: 200)
+                    Ellipse()
+                        .fill(Color.gray.opacity(0.3)) // Warna bayangan
+                        .frame(width: 150, height: 20) // Ukuran oval
+                        .offset(x:0,y: 100)
                     
-                    Text(difficulty.uppercased())
-                        .foregroundColor(.primer)
-                        .font(.largeTitle)
+                    LottieView(animation: .named("tes2"))
+                        .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                        .frame(width: 300, height: 250)
+                    
+                    
+                    Spacer()
                 }
                 
-               
+                
+                
+                
                 VStack {
                     
                     if let selectedMode = viewModel.getMode(by: difficulty) {
-                       
+                        
                         Spacer().frame(height: 10)
                         
                         Text(selectedMode.description)
@@ -42,6 +54,8 @@ struct ExplanationView: View {
                             .padding()
                             .foregroundColor(.black)
                             .multilineTextAlignment(.center)
+                            .lineLimit(nil)
+                            .fixedSize(horizontal: false, vertical: true)
                         
                         // ⏰ Menampilkan daftar detail aktivitas
                         VStack(alignment: .leading, spacing: 5) {
@@ -58,40 +72,49 @@ struct ExplanationView: View {
                                 }
                             }
                         }
+                        
+                        FocusModeView(
+                            focusTime: selectedMode.time.focus,
+                            restTime: selectedMode.time.rest,
+                            sessionCount: selectedMode.time.section
+                        )
                         .padding()
                         
                         NavigationLink(destination: StartView(difficulty: difficulty)) {
-                            Text("Start Timer")
-                                .foregroundColor(.primer)
+                            Text("Lanjutkan")
+                                .foregroundColor(.tombol2)
+                                .fontWeight(.bold)
                                 .frame(width: 200, height: 50)
-                                .background(Color.tombol2)
+                                .background(Color.tombol)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                         .frame(maxWidth: .infinity, maxHeight: 160)
+                    
                     } else {
                         Text("Mode tidak ditemukan")
                             .font(.title2)
                     }
                 }
                 .padding(.top, 30)
+                .padding(.bottom,80)
                 .background(Color.primer1)
                 .cornerRadius(40)
                 .overlay(alignment: .top) {
                     Text(viewModel.getMode(by: difficulty)?.title ?? "Mode Tidak Dikenal")
                         .font(.system(size: 30, weight: .semibold))
-                        .foregroundColor(.black)
+                        .foregroundColor(.primer)
                         .zIndex(10)
                         .padding(.horizontal, 45)
                         .padding(.vertical, 5)
-                        .background(.primer1)
+                        .background(.tombol2)
                         .cornerRadius(10)
                         .offset(y: -20)
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .edgesIgnoringSafeArea(.all)
                 
             }
-     
+            
         }
     }
 }

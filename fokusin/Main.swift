@@ -25,33 +25,39 @@ struct Main: View {
                 VStack {
                     // Header dengan logo teks dan ikon profil
                     HStack {
-                        Text("Fokusin")
-                            .font(.title)
-                            .fontWeight(.bold)
-                            .foregroundColor(.tombol)
                         
+                        Image(.home)
+                            .resizable()
+                            .frame(width: 105, height: 40)
                         Spacer()
-                        
-//                        Arah ke history
-                        // ✅ Perbaiki NavigationLink agar meneruskan modelContext
-                        
                         NavigationLink(destination: HistoryView()) {
-                                Image(systemName: "person.circle.fill")
-                                    .resizable()
-                                    .frame(width: 40, height: 40)
-                                    .foregroundColor(.tombol2)
-                            }
-
+                            Image(.telurUtuh)
+                                .resizable()
+                                .frame(width: 25, height: 30)
+                                .padding(12)
+                                .clipShape(Circle())
+                                .overlay(
+                                    Circle()
+                                        .stroke(Color.tombol2, lineWidth: 3)
+                                )
+                        }
+                        
                     }
                     .padding(.horizontal)
-                    .padding(.top, -15) // Beri padding atas agar tidak terlalu mepet
+                    .padding(.top, -15)
+                    
                     
                     Spacer()
                     
                     // Animasi Pop-Up + Bounce Effect
-                    Circle()
-                        .fill(.primer1)
-                        .frame(width: 200, height: 200)
+                    Ellipse()
+                        .fill(Color.gray.opacity(0.3)) // Warna bayangan
+                        .frame(width: 150, height: 20) // Ukuran oval
+                        .offset(x:0,y: 220)
+                
+                    Image(.telurUtuh)
+                        .resizable()
+                        .frame(width: 180, height: 200)
                         .scaleEffect(logoScale)
                         .opacity(logoOpacity)
                         .animation(.spring(response: 0.6, dampingFraction: 0.6, blendDuration: 0), value: logoScale)
@@ -63,30 +69,45 @@ struct Main: View {
                     
                     // Animasi Slide-Up Button
                     VStack {
-                        VStack(spacing: 10) {
-                            difficultyButton(label: "Easy")
-                            difficultyButton(label: "Medium")
-                            difficultyButton(label: "Hard")
+                        VStack {
+
+                            VStack(spacing: 10) {
+                                difficultyButton(label: "Easy")
+                                difficultyButton(label: "Medium")
+                                difficultyButton(label: "Hard")
+                            }
+                            
+                            Button(action: { difficulty = "Custom"; navigate() }) {
+                                Text("Custom")
+                                    .foregroundColor(.primer)
+                                    .frame(width: 280, height: 70)
+                                    .fontWeight(.bold)
+                                    .background(.tombol2)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10) // Bentuk border sesuai clipShape
+                                            .stroke(.primer, lineWidth: 4) // Warna dan ketebalan border
+                                    )
+                                
+                            }
+                            
+//                            Spacer() // ✅ Spacer dengan tinggi 11
                         }
-                        
-                        Button(action: { difficulty = "Custom"; navigate() }) {
-                            Text("Custom")
-                                .foregroundColor(.primer)
-                                .frame(width: 200, height: 50)
-                                .background(.tombol2)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                        }
-                        .padding(.top, 10)
-                        
+                        .padding(.bottom, 80)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .offset(y: buttonOffset)
+                        .opacity(buttonOpacity)
+                        .animation(.easeOut(duration: 0.6).delay(0.5), value: buttonOffset)
+                        .animation(.easeOut(duration: 0.6).delay(0.5), value: buttonOpacity)
+    
                     }
-                    .offset(y: buttonOffset)
-                    .opacity(buttonOpacity)
-                    .animation(.easeOut(duration: 0.6).delay(0.5), value: buttonOffset)
-                    .animation(.easeOut(duration: 0.6).delay(0.5), value: buttonOpacity)
-                    
-                    Spacer()
+                    .padding(.vertical, 10)
+                    .frame(width: .infinity, height: 450)
+                    .background(Color.primer1)
+                    .cornerRadius(40)
                 }
-                .padding()
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                .edgesIgnoringSafeArea(.bottom)
             }
             .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(for: String.self) { difficulty in
@@ -114,10 +135,16 @@ struct Main: View {
         Button(action: { difficulty = label; navigate() }) {
             Text(label)
                 .foregroundColor(.tombol2)
-                .frame(width: 200, height: 50)
+                .frame(width: 280, height: 70)
                 .background(.tombol)
+                .fontWeight(.bold)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10) // Bentuk border sesuai clipShape
+                        .stroke(Color.tombol2, lineWidth: 4) // Warna dan ketebalan border
+                )
         }
+
     }
     
     private func navigate() {

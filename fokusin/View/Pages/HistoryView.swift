@@ -18,7 +18,7 @@ struct HistoryView: View {
                 if sessions.isEmpty {
                     Section {
                         VStack {
-                            LottieView(animation: .named("EmpetyEgg"))
+                            LottieView(animation: .named("eggNest"))
                                 .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
                                 .frame(width: 300, height: 250)  // 🔹 Sesuaikan ukuran
                             

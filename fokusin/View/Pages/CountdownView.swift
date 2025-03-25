@@ -16,8 +16,10 @@ struct CountdownView: View {
     @State private var showExitAlert: Bool = false
     @State private var showSessionAlert: Bool = false
     @State private var sessionMessage: String = ""
-    @State private var buttonText: String = "Start"
+    @State private var buttonText: String = "Mulai"
     @State private var hasStarted: Bool = false
+    
+    @State private var isShaking = false
     
     @AppStorage("wasInactive") private var wasInactive: Bool = false
     
@@ -39,6 +41,10 @@ struct CountdownView: View {
             Color.primer.ignoresSafeArea(.all)
             
             VStack {
+                Text(isFocusTime ? "Focus Time" : "Rest Time")
+                    .font(.largeTitle)
+                    .padding()
+                    .fontWeight(.bold)
                 ZStack {
 //                    Circle()
 //                        .fill(Color.primer1)
@@ -51,10 +57,21 @@ struct CountdownView: View {
 //                    }
 //                    .frame(width: 200, height: 200)
 
+                    Image(.telurUtuh)
+                        .resizable()
+                        .frame(width: 180, height: 200)
+                        .padding(.bottom, 20)
+                        .rotationEffect(.degrees(isShaking ? 5 : -5)) // 🔄 Goyangan kanan-kiri
                     
-                    Text(isFocusTime ? "Focus Time" : "Rest Time")
-                        .font(.largeTitle)
-                        .padding()
+                        .onAppear {
+                            withAnimation(
+                                Animation.easeInOut(duration: 0.15).repeatForever(autoreverses: true)
+                            ) {
+                                isShaking.toggle() }// Mulai animasi
+                        }
+
+                    
+                    
                 }
                 
                 Text("\(formatTime(timeRemaining))")
@@ -64,9 +81,10 @@ struct CountdownView: View {
                 HStack(spacing: 20) {
                     Button(action: { handleButtonPress() }) {
                         Text(buttonText)
-                            .foregroundColor(.white)
+                            .foregroundColor(buttonText == "Mulai" ? Color.tombol2 : Color.primer1)
                             .frame(width: 200, height: 50)
-                            .background(buttonText == "Start" ? Color.green : Color.tombol2)
+                            .background(buttonText == "Mulai" ? Color.tombol : Color.tombol2)
+                            .fontWeight(.bold)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                 }
@@ -147,7 +165,7 @@ struct CountdownView: View {
     }
     
     private func handleButtonPress() {
-        if buttonText == "Start" {
+        if buttonText == "Mulai" {
             startTimer()
             buttonText = "Stop"
             hasStarted = true  // ✅ Tandai bahwa Pomodoro telah dimulai
