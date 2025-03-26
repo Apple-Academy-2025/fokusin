@@ -32,7 +32,7 @@ struct ExplanationView: View {
                         .offset(x:0,y: 100)
                     
                     LottieView(animation: .named("tes2"))
-                        .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
+                        .playbackMode(.playing(.toProgress(1, loopMode: .playOnce)))
                         .frame(width: 300, height: 250)
                     
                     
@@ -48,30 +48,31 @@ struct ExplanationView: View {
                         
                         Spacer().frame(height: 10)
                         
+                        VStack(alignment: .leading) {
                         Text(selectedMode.description)
                             .font(.title2)
                             .fontWeight(.regular)
                             .padding()
                             .foregroundColor(.black)
-                            .multilineTextAlignment(.center)
+                            .multilineTextAlignment(.leading)
                             .lineLimit(nil)
                             .fixedSize(horizontal: false, vertical: true)
                         
                         // ⏰ Menampilkan daftar detail aktivitas
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("📌 Aktivitas Rekomendasi:")
-                                .font(.headline)
-                                .padding(.top, 10)
-                            
-                            ForEach(selectedMode.detail, id: \.self) { activity in
-                                HStack {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.green)
-                                    Text(activity)
-                                        .font(.body)
+                        
+        
+                            VStack(alignment:.leading,spacing:5){
+                                ForEach(selectedMode.detail, id: \.self) { activity in
+                                    HStack {
+                                        Image(systemName: "circle.fill")
+                                            .font(.system(size: 5))
+                                            
+                                        Text(activity)
+                                            .font(.body)
+                                    }.padding(.horizontal,22)
                                 }
                             }
-                        }
+                        }.padding(.horizontal)
                         
                         FocusModeView(
                             focusTime: selectedMode.time.focus,
@@ -81,15 +82,17 @@ struct ExplanationView: View {
                         .padding()
                         
                         NavigationLink(destination: StartView(difficulty: difficulty)) {
-                            Text("Lanjutkan")
+                            Text("NEXT")
+                                .font(.title2)
                                 .foregroundColor(.tombol2)
                                 .fontWeight(.bold)
                                 .frame(width: 200, height: 50)
                                 .background(Color.tombol)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
+                            
                         }
                         .frame(maxWidth: .infinity, maxHeight: 160)
-                    
+                        Spacer()
                     } else {
                         Text("Mode tidak ditemukan")
                             .font(.title2)
@@ -121,6 +124,6 @@ struct ExplanationView: View {
 
 // 🛠️ Preview
 #Preview {
-    ExplanationView(difficulty: "Easy")
+    ExplanationView(difficulty: "Custom")
 }
 

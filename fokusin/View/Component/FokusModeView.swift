@@ -15,7 +15,7 @@ struct FocusModeView: View {
     var body: some View {
         HStack(spacing: 20) {
             VStack {
-                Text("Fokus")
+                Text("Focus")
                     .font(.headline)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
@@ -30,7 +30,7 @@ struct FocusModeView: View {
             }
             
             VStack {
-                Text("Istirahat")
+                Text("Break")
                     .font(.headline)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)
@@ -45,7 +45,7 @@ struct FocusModeView: View {
             }
             
             VStack {
-                Text("Sesi")
+                Text("Session")
                     .font(.headline)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 5)

@@ -11,36 +11,36 @@ class DifficultyViewModel: ObservableObject {
     @Published var modes: [DifficultyMode] = [
         DifficultyMode(
             id: 1,
-            difficulty: "Easy",
-            title: "Mode Easy",
-            description: "Mode easy: 15 menit fokus dengan 5 menit istirahat.",
-            time: (focus: 15 * 60, rest: 5 * 60, section: 2),
-            detail: ["Baca buku", "Baca jurnal"]
+            difficulty: "Short",
+            title: "SHORT MODE",
+            description: "This Pomodoro Short Mode Session is perfect for simple tasks such as : ",
+            time: (focus: 15 * 60, rest: 3 * 60, section: 1),
+            detail: ["Reading Book", "Journaling","Organizing Files","Recording Daily Finances"]
         ),
         DifficultyMode(
             id: 2,
-            difficulty: "Medium",
-            title: "Mode Medium",
-            description: "Mode medium: 25 menit fokus dengan 5 menit istirahat.",
-            time: (focus: 25 * 60, rest: 5 * 60, section: 3),
-            detail: ["Belajar coding", "Review materi"]
+            difficulty: "Reguler",
+            title: "REGULAR MODE",
+            description: "This pomodoro regular mode session is ideal for tasks that require more concentration such as : ",
+            time: (focus: 30 * 60, rest: 5 * 60, section: 1),
+            detail: ["Writing Reports", "Reading Books", "Reviewing Materials", "Completing Assignments"]
         ),
         DifficultyMode(
             id: 3,
-            difficulty: "Hard",
-            title: "Mode Hard",
-            description: "Mode hard: 45 menit fokus dengan 15 menit istirahat.",
-            time: (focus: 45 * 60, rest: 15 * 60, section: 4),
-            detail: ["Mengerjakan proyek", "Membaca jurnal ilmiah"]
+            difficulty: "Long",
+            title: "LONG MODE",
+            description: "This pomodoro long mode session is perfect for complex tasks such as:",
+            time: (focus: 60 * 60, rest: 10 * 60, section: 2),
+            detail: ["Coding", "Conducting Research", "Writing Code", "Designing UI/UX"]
         ),
         
         DifficultyMode(
             id: 4,
             difficulty: "Custom",
-            title: "Mode Custom",
-            description: "Mode hard: 45 menit fokus dengan 15 menit istirahat.",
+            title: "CUSTOM MODE",
+            description: "The pomodoro custom mode session gives you the flexibility to set your work and break durations based on task difficulty, your physical condition, and personal preferences.",
             time: (focus: 0, rest: 0, section: 0),
-            detail: ["Mengerjakan proyek", "Membaca jurnal ilmiah"]
+            detail: []
         )
     ]
     

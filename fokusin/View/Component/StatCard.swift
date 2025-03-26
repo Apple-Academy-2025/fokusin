@@ -26,14 +26,17 @@ struct StatCard: View {
                 .frame(width: 2)
             
             VStack {
-                Text("\(count) Telur")
+                Text("\(count)")
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(Color.brown)
+                    .frame(maxWidth: .infinity, alignment: .leading) // Rata kiri
+
                 
                 
                 Text(label)
-                    .font(.system(size: 14))
+                    .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(.brown.opacity(0.8))
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .padding()

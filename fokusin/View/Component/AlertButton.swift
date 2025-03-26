@@ -96,12 +96,6 @@ struct CustomAlert: View {
     }
 }
 
-//
-//struct CongratsCompPriview : PreviewProvider{
-//    static var previews: some View {
-//        CongratsComp(title: "Judul", message: "Ini Body", buttonTitle: "Keluar", action: <#T##() -> ()#>)
-//    }
-//}
 
 
 #Preview {

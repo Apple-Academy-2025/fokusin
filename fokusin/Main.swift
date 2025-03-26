@@ -57,7 +57,7 @@ struct Main: View {
                 
                     Image(.telurUtuh)
                         .resizable()
-                        .frame(width: 180, height: 200)
+                        .frame(width: 170, height: 200)
                         .scaleEffect(logoScale)
                         .opacity(logoOpacity)
                         .animation(.spring(response: 0.6, dampingFraction: 0.6, blendDuration: 0), value: logoScale)
@@ -72,9 +72,9 @@ struct Main: View {
                         VStack {
 
                             VStack(spacing: 10) {
-                                difficultyButton(label: "Easy")
-                                difficultyButton(label: "Medium")
-                                difficultyButton(label: "Hard")
+                                difficultyButton(label: "Short")
+                                difficultyButton(label: "Reguler")
+                                difficultyButton(label: "Long")
                             }
                             
                             Button(action: { difficulty = "Custom"; navigate() }) {
@@ -86,7 +86,7 @@ struct Main: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 10))
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 10) // Bentuk border sesuai clipShape
-                                            .stroke(.primer, lineWidth: 4) // Warna dan ketebalan border
+                                            .stroke(.primer, lineWidth: 2) // Warna dan ketebalan border
                                     )
                                 
                             }
@@ -141,7 +141,7 @@ struct Main: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .overlay(
                     RoundedRectangle(cornerRadius: 10) // Bentuk border sesuai clipShape
-                        .stroke(Color.tombol2, lineWidth: 4) // Warna dan ketebalan border
+                        .stroke(Color.tombol2, lineWidth: 2) // Warna dan ketebalan border
                 )
         }
 

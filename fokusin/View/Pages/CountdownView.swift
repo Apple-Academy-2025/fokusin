@@ -13,10 +13,14 @@ struct CountdownView: View {
     @State private var timerRunning = false
     @State private var timer: Timer?
     
+    @State private var showAlertFail: Bool = false
+
+    
     @State private var showExitAlert: Bool = false
     @State private var showSessionAlert: Bool = false
     @State private var sessionMessage: String = ""
-    @State private var buttonText: String = "Mulai"
+    
+    @State private var buttonText: String = "START"
     @State private var hasStarted: Bool = false
     
     @State private var isShaking = false
@@ -38,28 +42,21 @@ struct CountdownView: View {
     
     var body: some View {
         ZStack {
-            Color.primer.ignoresSafeArea(.all)
+            (isFocusTime ? Color.primer : Color.primer1)
+                .ignoresSafeArea(.all)
+
             
             VStack {
-                Text(isFocusTime ? "Focus Time" : "Rest Time")
+                Text(isFocusTime ? "Focus Time" : "Break Time")
                     .font(.largeTitle)
                     .padding()
                     .fontWeight(.bold)
                 ZStack {
-//                    Circle()
-//                        .fill(Color.primer1)
-//                        .frame(width: 200, height: 200)
-//                    Section{
-//                        LottieView(animation: .named("EmpetyEgg"))
-//                            .playbackMode(.playing(.toProgress(1, loopMode: .loop)))
-//                            .frame(width: 450,height: 350)
-//                            
-//                    }
-//                    .frame(width: 200, height: 200)
-
+                   
+                    
                     Image(.telurUtuh)
                         .resizable()
-                        .frame(width: 180, height: 200)
+                        .frame(width: 170, height: 200)
                         .padding(.bottom, 20)
                         .rotationEffect(.degrees(isShaking ? 5 : -5)) // 🔄 Goyangan kanan-kiri
                     
@@ -69,7 +66,7 @@ struct CountdownView: View {
                             ) {
                                 isShaking.toggle() }// Mulai animasi
                         }
-
+                    
                     
                     
                 }
@@ -81,9 +78,9 @@ struct CountdownView: View {
                 HStack(spacing: 20) {
                     Button(action: { handleButtonPress() }) {
                         Text(buttonText)
-                            .foregroundColor(buttonText == "Mulai" ? Color.tombol2 : Color.primer1)
+                            .foregroundColor(buttonText == "START" ? Color.tombol2 : Color.primer1)
                             .frame(width: 200, height: 50)
-                            .background(buttonText == "Mulai" ? Color.tombol : Color.tombol2)
+                            .background(buttonText == "START" ? Color.tombol : Color.tombol2)
                             .fontWeight(.bold)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
@@ -101,57 +98,73 @@ struct CountdownView: View {
             }
         }
         .overlay {
-            if sessionCount > 1 {
+            if sessionCount > 0 {
                 if showSessionAlert {
                     AlertWithoutButton(
                         isActive: $showSessionAlert,
-                        title: "Perubahan Sesi",
+                        title: "Session Changes",
                         message: sessionMessage
                     )
                 }
             } else {
-                if showSessionAlert {
-                    AlertWithoutButton(
-                        isActive: $showSessionAlert,
-                        title: "Hebatt!!",
-                        message: sessionMessage
-                    )
+                // ✅ Popup "Congrats" tidak bisa ditutup otomatis
+                AlertCongrats(
+                    isActive: .constant(true), // 🚀 Selalu aktif hingga user menutup
+                    title: "Greatss!!",
+                    message: sessionMessage,
+                    difficultyView: "\(difficulty)"
+                ) {
+                    print("Tombol ditekan!") // Contoh aksi saat tombol ditekan
                 }
             }
+            
+            // Alert untuk keluar pomodoro
             if showExitAlert {
                 CustomAlert(
                     isActive: $showExitAlert,
-                    title: "Keluar Nih?!",
-                    message: "Kamu yakin akan meninggalkan pomodoro? telur nya nanti pecah",
-                    buttonTitle: "Keluar"
-                ){
-                    //                    saveSession(isCompleted: false)
+                    title: "Are you sure?!",
+                    message: "Are you sure you want to leave the pomodoro? The egg will crack.",
+                    buttonTitle: "EXIT"
+                ) {
                     saveSession(isCompleted: false)
                     print("keluar ok")
                     exitPomodoro()
                 }
             }
-        }.interactiveDismissDisabled(true)
-            .onChange(of: scenePhase) { oldPhase, newPhase in
-                if newPhase == .active {
-                    print("Active")
-                    if wasInactive {
-                        wasInactive = false
-                        if hasStarted {  // ✅ Jika Pomodoro sudah dimulai, maka gagal
-                            sessionMessage = "Sesi gagal karena kamu keluar dari aplikasi!"
-                            showSessionAlert = true
-                            saveSession(isCompleted: false)  // ✅ Simpan status gagal
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                exitPomodoro()  // Dismiss otomatis setelah 3 detik
-                            }
-                        }
-                    }
-                } else if newPhase == .inactive || newPhase == .background {
-                    print("Inactive/Background")
-                    wasInactive = true
+            
+            if showAlertFail {
+                AlertFail(
+                    isActive: $showAlertFail,
+                    title: "OH NO!!",
+                    message: "Session failed because you exited the application!",
+                    difficultyView: "\(difficulty)"
+                ) {
+                    exitPomodoro() // Keluar dari Pomodoro setelah menutup alert
                 }
             }
+
+        }
+        .interactiveDismissDisabled(true)
+        .onChange(of: scenePhase) { oldPhase, newPhase in
+            if newPhase == .active {
+                print("Active")
+                if wasInactive {
+                    wasInactive = false
+                    if hasStarted {  // ✅ Jika Pomodoro sudah dimulai, maka gagal
+                        sessionMessage = "Session failed because you exited the application!"
+                        showAlertFail = true
+                        saveSession(isCompleted: false)  // ✅ Simpan status gagal
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                            exitPomodoro()  // Dismiss otomatis setelah 3 detik
+                        }
+                    }
+                }
+            } else if newPhase == .inactive || newPhase == .background {
+                print("Inactive/Background")
+                wasInactive = true
+            }
+        }
         
         
         
@@ -165,9 +178,9 @@ struct CountdownView: View {
     }
     
     private func handleButtonPress() {
-        if buttonText == "Mulai" {
+        if buttonText == "START" {
             startTimer()
-            buttonText = "Stop"
+            buttonText = "STOP"
             hasStarted = true  // ✅ Tandai bahwa Pomodoro telah dimulai
         } else {
             stopTimer()
@@ -194,39 +207,44 @@ struct CountdownView: View {
     
     private func handleSessionEnd() {
         if isFocusTime {
+            // ✅ Sesi fokus selesai, kurangi sessionCount
             sessionCount -= 1
+
             if sessionCount > 0 {
+                // ✅ Jika masih ada sesi tersisa, lanjut ke istirahat
                 isFocusTime = false
                 timeRemaining = restTime
-                sessionMessage = "Waktunya istirahat! Sisa \(sessionCount) sesi lagi."
+                sessionMessage = "Time for a break! There are \(sessionCount) sessions left."
                 showSessionAlert = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     showSessionAlert = false
                     startTimer()
                 }
             } else {
+                // ✅ Jika sudah sesi terakhir, langsung Congrats tanpa istirahat
                 saveSession(isCompleted: true)
-                sessionMessage = "Pomodoro selesai! Kerja bagus! 🎉"
+                sessionMessage = "🎉 Congrats! You completed all sessions!"
                 showSessionAlert = true
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    dismiss()  // ✅ Kembali ke halaman utama setelah selesai
-                }
-                
             }
         } else {
-            sessionCount -= 1
+            // ✅ Sesi istirahat selesai, lanjut ke fokus berikutnya
             isFocusTime = true
             timeRemaining = focusTime
-            sessionMessage = "Bersiap! Waktu fokus akan dimulai lagi."
+            sessionMessage = "Get ready! Focus time is about to start again."
             showSessionAlert = true
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 showSessionAlert = false
                 startTimer()
             }
         }
     }
+
+    
+
+
+    
     
     private func exitPomodoro() {
         stopTimer()
@@ -266,7 +284,7 @@ struct CountdownView: View {
 
 struct CountdownView_Previews: PreviewProvider {
     static var previews: some View {
-        CountdownView(difficulty: "Easy", focusTime: 10, restTime: 5, session: 2)
+        CountdownView(difficulty: "Short", focusTime: 3, restTime: 3, session: 2)
     }
 }
 

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TotalTimeCard: View {
     let icon: String
-    let count: Int
+    let count: String
     let label: String
     let status: Bool
     
@@ -49,8 +49,8 @@ struct TotalTimeCard: View {
 
 #Preview {
     HStack(spacing: 10) {
-        TotalTimeCard(icon: "clock", count: 2, label: "Total waktu", status: false)
-        TotalTimeCard(icon: "target", count: 2, label: "hari ini", status: true)
+        TotalTimeCard(icon: "clock", count: "02 H : 01 M", label: "Total waktu", status: false)
+        TotalTimeCard(icon: "target", count: "02 H : 01 M", label: "hari ini", status: true)
     }
 }
 

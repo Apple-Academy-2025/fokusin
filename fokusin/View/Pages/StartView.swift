@@ -124,7 +124,7 @@ struct StartView: View {
                         restTime: restTime,
                         session: session
                     )) {
-                        Text("Mulai")
+                        Text("NEXT")
                             .foregroundColor(.tombol2)
                             .fontWeight(.bold)
                             .frame(width: 200, height: 50)
@@ -139,7 +139,7 @@ struct StartView: View {
                 .edgesIgnoringSafeArea(.bottom)
                 
                 Spacer(minLength: 90)
-            }
+            }.padding()
         }
         .onAppear {
             if let mode = viewModel.getMode(by: difficulty) {
@@ -153,7 +153,7 @@ struct StartView: View {
 
 
 #Preview {
-    StartView(difficulty: "Custom")
+    StartView(difficulty: "Short")
 }
 
 
