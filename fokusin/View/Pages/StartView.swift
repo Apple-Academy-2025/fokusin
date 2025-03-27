@@ -11,16 +11,19 @@
 
 import SwiftUI
 
+
 struct StartView: View {
     @StateObject private var viewModel = DifficultyViewModel()
     let difficulty: String
     
     @State private var focusTime: Int = 0
     @State private var restTime: Int = 0
-    @State private var session: Int = 0
+    @State private var session: Int = 2
     
     // 🔥 State untuk animasi goyangan telur
     @State private var isShaking = false
+    
+    
     
     init(difficulty: String) {
         self.difficulty = difficulty
@@ -59,8 +62,8 @@ struct StartView: View {
                 VStack {
                     if difficulty == "Custom" {
                         VStack {
-                            CustomTimePicker(title: "Fokus",icon: "target", totalSeconds: $focusTime)
-                            CustomTimePicker(title: "Istirahat",icon: "clock", totalSeconds: $restTime)
+                            CustomTimePicker(title: "Focus",icon: "target", totalSeconds: $focusTime)
+                            CustomTimePicker(title: "Break",icon: "clock", totalSeconds: $restTime)
                             
                             HStack {
                                 // 🔹 Ikon di sebelah kiri
@@ -69,18 +72,20 @@ struct StartView: View {
                                         .font(.title2)
                                         .clipShape(Circle())
                                         .foregroundColor(.tombol2)
-
-                                    Text("Sesi")
+                                    
+                                    Text("Session")
                                         .font(.title3)
                                         .fontWeight(.semibold)
                                 }
-
+                                
                                 Divider()
-                                       .frame(width: 94)
+                                    .frame(width: 65)
                                 
                                 // 🔹 Tombol sesi
                                 HStack(spacing: 8) {
-                                    Button(action: { if session > 1 { session -= 1 } }) {
+                                    Button(action: {  if session > 2 {  // 🔹 Pastikan sesi minimal 2
+                                        session -= 1
+                                    }}) {
                                         Text("−")
                                             .font(.title)
                                             .frame(width: 30, height: 30) // Ukuran tombol
@@ -88,12 +93,12 @@ struct StartView: View {
                                             .foregroundColor(.black)
                                             .clipShape(RoundedRectangle(cornerRadius: 5))
                                     }
-
+                                    
                                     Text("\(session)")
                                         .font(.title)
                                         .fontWeight(.bold)
                                         .frame(width: 30)
-
+                                    
                                     Button(action: { if session < 10 { session += 1 } }) {
                                         Text("+")
                                             .font(.title)
@@ -124,13 +129,14 @@ struct StartView: View {
                         restTime: restTime,
                         session: session
                     )) {
-                        Text("NEXT")
+                        Text("CONTINUE")
                             .foregroundColor(.tombol2)
                             .fontWeight(.bold)
                             .frame(width: 200, height: 50)
                             .background(Color.tombol)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
+                    .padding(.bottom,40)
                     .frame(maxWidth: .infinity, maxHeight: 85)
                 }
                 .padding()
@@ -145,7 +151,7 @@ struct StartView: View {
             if let mode = viewModel.getMode(by: difficulty) {
                 self.focusTime = mode.time.focus
                 self.restTime = mode.time.rest
-                self.session = mode.time.section
+                self.session = max(mode.time.section, 2)
             }
         }
     }
@@ -153,7 +159,7 @@ struct StartView: View {
 
 
 #Preview {
-    StartView(difficulty: "Short")
+    StartView(difficulty: "Custom")
 }
 
 

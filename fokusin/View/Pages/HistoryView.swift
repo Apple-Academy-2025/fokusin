@@ -141,7 +141,10 @@ struct HistoryView: View {
             }
             
             
+        }.onAppear {
+            print("🔄 Memuat ulang sesi di HistoryView... Total sesi: \(sessions.count)")
         }
+
     }
     
     

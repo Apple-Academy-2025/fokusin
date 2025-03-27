@@ -54,7 +54,7 @@ struct Main: View {
                         .fill(Color.gray.opacity(0.3)) // Warna bayangan
                         .frame(width: 150, height: 20) // Ukuran oval
                         .offset(x:0,y: 220)
-                
+                    
                     Image(.telurUtuh)
                         .resizable()
                         .frame(width: 170, height: 200)
@@ -70,14 +70,14 @@ struct Main: View {
                     // Animasi Slide-Up Button
                     VStack {
                         VStack {
-
+                            
                             VStack(spacing: 10) {
                                 difficultyButton(label: "Short")
                                 difficultyButton(label: "Reguler")
                                 difficultyButton(label: "Long")
                             }
                             
-                            Button(action: { difficulty = "Custom"; navigate() }) {
+                            Button(action: {  difficulty = "Custom"; navigate() }) {
                                 Text("Custom")
                                     .foregroundColor(.primer)
                                     .frame(width: 280, height: 70)
@@ -91,7 +91,7 @@ struct Main: View {
                                 
                             }
                             
-//                            Spacer() // ✅ Spacer dengan tinggi 11
+                            //                            Spacer() // ✅ Spacer dengan tinggi 11
                         }
                         .padding(.bottom, 80)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -99,7 +99,7 @@ struct Main: View {
                         .opacity(buttonOpacity)
                         .animation(.easeOut(duration: 0.6).delay(0.5), value: buttonOffset)
                         .animation(.easeOut(duration: 0.6).delay(0.5), value: buttonOpacity)
-    
+                        
                     }
                     .padding(.vertical, 10)
                     .frame(width: .infinity, height: 450)
@@ -128,6 +128,9 @@ struct Main: View {
                     bounceEffect = true
                 }
             }
+        }
+        .onAppear {
+            print("🔄 Main muncul kembali, memeriksa sesi yang tersimpan...")
         }
     }
     

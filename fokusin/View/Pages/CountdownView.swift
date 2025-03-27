@@ -47,7 +47,7 @@ struct CountdownView: View {
 
             
             VStack {
-                Text(isFocusTime ? "Focus Time" : "Break Time")
+                Text(isFocusTime ? "Focus" : "Break")
                     .font(.largeTitle)
                     .padding()
                     .fontWeight(.bold)
@@ -257,12 +257,38 @@ struct CountdownView: View {
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
+//    private func saveSession(isCompleted: Bool) {
+//        guard let difficultyLevel = Difficulty(rawValue: difficulty) else {
+//            print("⚠️ Error: Difficulty tidak valid")
+//            return
+//        }
+//        
+//        let newSession = PomodoroSession(
+//            difficulty: difficultyLevel,
+//            timeFocus: focusTime,
+//            session: session,
+//            totalFocus: focusTime * session,
+//            status: isCompleted
+//        )
+//        
+//        modelContext.insert(newSession)
+//        
+//        do {
+//            try modelContext.save()
+//            print("✅ Session saved successfully!")
+//        } catch {
+//            print("❌ Failed to save session: \(error.localizedDescription)")
+//        }
+//    }
+    
     private func saveSession(isCompleted: Bool) {
+        print("🔄 Menyimpan sesi... Difficulty:", difficulty)
+        
         guard let difficultyLevel = Difficulty(rawValue: difficulty) else {
-            print("⚠️ Error: Difficulty tidak valid")
+            print("❌ Error: Difficulty tidak valid -", difficulty)
             return
         }
-        
+
         let newSession = PomodoroSession(
             difficulty: difficultyLevel,
             timeFocus: focusTime,
@@ -270,7 +296,7 @@ struct CountdownView: View {
             totalFocus: focusTime * session,
             status: isCompleted
         )
-        
+
         modelContext.insert(newSession)
         
         do {
@@ -280,6 +306,7 @@ struct CountdownView: View {
             print("❌ Failed to save session: \(error.localizedDescription)")
         }
     }
+
 }
 
 struct CountdownView_Previews: PreviewProvider {

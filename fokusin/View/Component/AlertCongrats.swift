@@ -15,7 +15,7 @@ struct AlertCongrats: View {
     var action: () -> Void
     @State private var offset: CGFloat = 1000
     @Environment(\.dismiss) var dismiss
-
+    
     var body: some View {
         ZStack {
             // Latar belakang gelap yang menutupi seluruh layar
@@ -84,31 +84,32 @@ struct AlertCongrats: View {
             isActive = false
         }
     }
-
+    
     func getKeyWindow() -> UIWindow? {
         return UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .flatMap { $0.windows }
             .first { $0.isKeyWindow }
     }
-
+    
     func navigateToStartView() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            if let window = getKeyWindow() {
-                window.rootViewController = UIHostingController(rootView: ExplanationView(difficulty: difficultyView))
-                window.makeKeyAndVisible()
-            }
+        dismiss()
+    }
+    
+    func navigateToMain() {
+        if let window = getKeyWindow() {
+            window.rootViewController = UIHostingController(rootView:
+                NavigationStack {
+                    Main()
+                        .onAppear {
+                            print("✅ Kembali ke Main, memperbarui data history...")
+                        }
+                }
+            )
+            window.makeKeyAndVisible()
         }
     }
 
-    func navigateToMain() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            if let window = getKeyWindow() {
-                window.rootViewController = UIHostingController(rootView: Main())
-                window.makeKeyAndVisible()
-            }
-        }
-    }
 }
 
 #Preview {

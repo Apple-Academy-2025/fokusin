@@ -128,22 +128,24 @@ struct AlertFail: View {
     }
     
     func navigateToStartView() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            if let window = getKeyWindow() {
-                window.rootViewController = UIHostingController(rootView: ExplanationView(difficulty: difficultyView))
-                window.makeKeyAndVisible()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                if let window = getKeyWindow() {
+                    window.rootViewController = UIHostingController(rootView: ExplanationView(difficulty: difficultyView))
+                    window.makeKeyAndVisible()
+                }
             }
         }
-    }
-    
-    func navigateToMain() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            if let window = getKeyWindow() {
-                window.rootViewController = UIHostingController(rootView: Main())
-                window.makeKeyAndVisible()
+
+        func navigateToMain() {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                if let window = getKeyWindow() {
+                    window.rootViewController = UIHostingController(rootView: Main())
+                    window.makeKeyAndVisible()
+                }
             }
         }
-    }
+
+
     
 }
 
@@ -153,7 +155,7 @@ struct AlertFail: View {
         isActive: .constant(true),
         title: "Contoh",
         message: "Ini hanya contoh preview",
-        difficultyView: "Long"
+        difficultyView: "Custom"
     ) {
         print("Tombol ditekan!")
     }

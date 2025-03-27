@@ -16,15 +16,15 @@ struct OnBoarding: View {
                         .padding(.bottom, 80)
                     
                     
-                    Text("Jaga Fokus,")
+                    Text("Stay Focus,")
                         .foregroundColor(.tombol2)
                         .bold()
                         .font(.title)
-                    Text("Jaga Telur,")
+                    Text("Take Care of the Eggs,")
                         .foregroundColor(.tombol2)
                         .bold()
                         .font(.title)
-                    Text("Jangan Sampai Pecah")
+                    Text("Dont Let it Break")
                         .foregroundColor(.tombol2)
                         .bold()
                         .font(.title)
@@ -34,7 +34,7 @@ struct OnBoarding: View {
                         UserDefaults.standard.set(true, forKey: "hasSeenOnboarding")
                         isActive = true
                     }) {
-                        Text("NEXT")
+                        Text("CONTINUE")
                             .foregroundColor(.tombol2)
                             .frame(width: 200, height: 50)
                             .fontWeight(.bold)
