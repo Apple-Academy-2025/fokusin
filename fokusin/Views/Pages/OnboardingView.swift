@@ -17,8 +17,7 @@ struct OnboardingView: View {
                 .ignoresSafeArea()
                 .padding(.leading,25)
             
-            
-            
+        
             VStack {
                 Spacer()
                 VStack(spacing:20) {
@@ -39,7 +38,8 @@ struct OnboardingView: View {
                             .font(.system(size: 16, weight: .bold))
                             .padding(.horizontal, 32)
                             .padding(.vertical, 12)
-                            .background(Color.white)
+                            .frame(width:300)
+                            .background(Color.bgYellow)
                             .foregroundColor(Color("Text2"))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
@@ -47,9 +47,12 @@ struct OnboardingView: View {
                             )
                             .cornerRadius(8)
                     }
+                    
                 }
-                .padding(.bottom, 90)
+                .padding(.bottom, 112)
+                
             }
+            
             
             
         }

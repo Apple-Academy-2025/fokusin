@@ -15,7 +15,7 @@ struct SplashScreenView: View {
             if viewModel.shouldShowOnboarding{
                 OnboardingView(shouldShowOnboarding: $viewModel.shouldShowOnboarding)
             }else{
-                ContentView()
+                Homepageview()
             }
         } else {
             VStack {
@@ -31,4 +31,6 @@ struct SplashScreenView: View {
 
 #Preview {
     SplashScreenView()
+        .modelContainer(for: PomodoroSession.self, inMemory: true)
 }
+
