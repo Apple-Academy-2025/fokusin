@@ -9,60 +9,76 @@ import SwiftUI
 
 struct OnboardingView: View {
     @Binding var shouldShowOnboarding : Bool
+    @Environment(\.horizontalSizeClass) private var hClass
+
     var body: some View {
-        ZStack{
-            Color("Bg-Yellow")
-            Image("onboard-0")
-                .scaledToFill()
-                .ignoresSafeArea()
-                .padding(.leading,25)
-            
-        
-            VStack {
-                Spacer()
-                VStack(spacing:20) {
+        GeometryReader { geo in
+            let isPadLike = (hClass == .regular && geo.size.width >= 700)
+            let contentWidth: CGFloat = min(geo.size.width * (isPadLike ? 0.55 : 0.90),isPadLike ? 520 : 360)
+            let contentHeigh: CGFloat = min(geo.size.width * (isPadLike ? 20 : 10),isPadLike ? 250 : 250)
+            let titleSize: CGFloat   = isPadLike ? 28 : 20
+            let buttonFont: CGFloat  = isPadLike ? 20 : 16
+            let buttonHeight: CGFloat = isPadLike ? 56 : 48
+            let bottomPad: CGFloat   = max(geo.safeAreaInsets.bottom, 24)
+
+            ZStack {
+                // background image
+                Color("Bg-Yellow").ignoresSafeArea()
+                Image("onboard-0")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: geo.size.width, height: geo.size.height)
+                    .clipped()
                     
-                    Text("Pecahkan Telurnya, Temukan Kejutan Fauna di Dalamnya!")
-                        .foregroundColor(Color("Text1"))
-                        .multilineTextAlignment(.center)
-                        .font(.system(size: 20, weight: .semibold))
-                        .frame(width: 320)
-                    
-                    
-                    
-                    
-                    Button(action: {
-                        shouldShowOnboarding = false
-                    }) {
-                        Text("LANJUTKAN")
-                            .font(.system(size: 16, weight: .bold))
-                            .padding(.horizontal, 32)
-                            .padding(.vertical, 12)
-                            .frame(width:300)
-                            .background(Color.bgYellow)
-                            .foregroundColor(Color("Text2"))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.yellow, lineWidth: 2)
-                            )
-                            .cornerRadius(8)
+
+                // content
+                VStack {
+                    Spacer()
+                    VStack(spacing: isPadLike ? 20 : 16) {
+                        Text("Pecahkan Telurnya, Temukan Kejutan Fauna di Dalamnya!")
+                            .font(.system(size: titleSize, weight: .semibold))
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: contentWidth)
+                            .foregroundColor(.primary)
+                            .padding()
+                        Button {
+                            shouldShowOnboarding = false
+                        } label: {
+                            Text("LANJUTKAN")
+                                .font(.system(size: buttonFont, weight: .bold))
+                                .frame(maxWidth: .infinity)
+                                .frame(height: buttonHeight)
+                                .background(Color.bgYellow)
+                                .foregroundColor(Color("Text2"))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(Color.yellow, lineWidth: 2)
+                                )
+                                .clipShape(RoundedRectangle(cornerRadius: 12))
+                        }
+                        .frame(maxWidth: contentWidth)
+                        .padding()
                     }
-                    
+                   
+                    .padding(.vertical, isPadLike ? 22 : 16)
+                    .frame(maxWidth: contentWidth + 24, maxHeight: contentHeigh-20)
+                    .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 18))
+                    .shadow(color: .black.opacity(0.25), radius: 18, y: 6)
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, bottomPad)
                 }
-                .padding(.bottom, 112)
-                
             }
-            
-            
-            
+            .ignoresSafeArea()
         }
-        
-        
     }
 }
 
-#Preview {
-    StatefulPreviewWrapper(true) { binding in
-        AnyView(OnboardingView(shouldShowOnboarding: binding))
-    }
+// Preview helper
+private struct OnboardingPreviewWrapper: View {
+    @State private var show = true
+    var body: some View { OnboardingView(shouldShowOnboarding: $show) }
 }
+
+#Preview { OnboardingPreviewWrapper() }
+
+
