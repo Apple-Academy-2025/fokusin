@@ -19,10 +19,10 @@ struct SplashScreenView: View {
             }
         } else {
             VStack {
-                Image(systemName: "bolt.fill")
-                    .font(.system(size: 50))
-                    .foregroundColor(.yellow)
-                Text("Splash Screen")
+                Image("applogo")
+                    .resizable()
+                    .frame(width: 300, height: 300)
+                
             }
         }
     }
